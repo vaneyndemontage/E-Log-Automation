@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visitekaartje – E'LOG Automation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Montserrat", system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-wrapper {
+      width: 340px;
+      height: 900px;
+      background: #111;
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      padding: 24px 24px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* LOGO */
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fade-slide-down .7s ease-out forwards;
+    }
+
+    .logo img {
+      height: 40px;
+      display: block;
+    }
+
+    /* FOTO + ROBOT */
+    .avatar-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fade-scale .7s ease-out forwards;
+      animation-delay: .3s;
+    }
+
+    .avatar-orbit {
+      width: 220px;
+      height: 220px;
+      position: relative;
+    }
+
+    .avatar {
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      overflow: hidden;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.65);
+      z-index: 2;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transform-origin: center;
+      animation: orbit 10s linear infinite;
+      z-index: 1;
+    }
+
+    .orbit-ring::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+
+    .robot-wrapper {
+      margin-left: -6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .robot-svg {
+      width: 20px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+      transform: rotate(-18deg);
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* NAAM */
+    .name-block {
+      text-align: center;
+      margin-bottom: 26px;
+      opacity: 0;
+      animation: fade-slide-up .7s ease-out forwards;
+      animation-delay: .6s;
+    }
+
+    .name {
+      font-size: 23px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: #e30613;
+    }
+
+    .role {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #e30613;
+      letter-spacing: .12em;
+    }
+
+    /* CONTACT */
+    .contact-list {
+      list-style: none;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .contact-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .contact-text a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .contact-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* QR */
+    .qr-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .qr-wrapper img {
+      width: 180px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 6px;
+    }
+
+    /* BUTTON → vCard download */
+    .cta-btn {
+      display: block;
+      text-align: center;
+      border-radius: 999px;
+      border: 2px solid #e30613;
+      padding: 11px 22px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      margin-bottom: 24px;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      background: #e30613;
+      box-shadow: 0 10px 20px rgba(227,6,19,0.4);
+    }
+
+    /* CONVEYOR */
+    .conveyor {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .conveyor-belt {
+      position: absolute;
+      left: -24px;
+      right: -24px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 12px;
+      border-radius: 8px;
+      border: 2px solid #ffffff;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .conveyor-belt::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.18) 0px,
+        rgba(255,255,255,0.18) 2px,
+        transparent 2px,
+        transparent 10px
+      );
+    }
+
+    /* DOZEN */
+    .conveyor-box {
+      position: absolute;
+      top: 50%;
+      left: -60px;
+      transform: translateY(-120%);
+      border-radius: 4px;
+      border: 2px solid #e30613;
+      background: transparent;
+      animation: conveyor-move 18s linear infinite;
+    }
+
+    .conveyor-box::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      right: 4px;
+      height: 2px;
+      background: #e30613;
+    }
+
+    .conveyor-box::after {
+      content: "";
+      position: absolute;
+      right: 6px;
+      top: 10px;
+      width: 8px;
+      height: 2px;
+      background: #e30613;
+      border-radius: 1px;
+    }
+
+    .box-1 { width: 22px; height: 22px; animation-delay: 0s; }
+    .box-2 { width: 28px; height: 24px; animation-delay: -4s; }
+    .box-3 { width: 24px; height: 26px; animation-delay: -8s; }
+    .box-4 { width: 30px; height: 24px; animation-delay: -12s; }
+    .box-5 { width: 20px; height: 20px; animation-delay: -16s; }
+
+    @keyframes conveyor-move {
+      from { left: -60px; }
+      to   { left: 550px; }
+    }
+
+    /* Animations */
+    @keyframes fade-slide-down {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-slide-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-scale {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="card-wrapper">
+    <div class="content">
+
+      <!-- LOGO -->
+      <div class="logo">
+        <img src="elogautomation-logo-white (1).svg" alt="E'LOG Automation logo">
+      </div>
+
+      <!-- FOTO + ROBOT -->
+      <div class="avatar-wrapper">
+        <div class="avatar-orbit">
+
+          <div class="orbit-ring">
+            <div class="robot-wrapper">
+              <svg class="robot-svg" viewBox="0 0 80 120">
+                <rect x="2" y="38" width="7" height="44" rx="3.5" fill="#141820"/>
+                <rect x="71" y="38" width="7" height="44" rx="3.5" fill="#141820"/>
+                <rect x="8" y="8" width="64" height="104" rx="24" fill="#E30613"/>
+                <rect x="16" y="16" width="48" height="88" rx="20" fill="#151A23"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="avatar">
+            <img src="Tim_profielfoto.png" alt="Profielfoto">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NAAM -->
+      <div class="name-block">
+        <div class="name">Tim Van de Voorde</div>
+        <div class="role">Project Engineer</div>
+      </div>
+
+      <!-- CONTACT -->
+      <ul class="contact-list">
+
+        <li class="contact-item">
+          <div class="contact-icon"><img src="mail_icoon.png"></div>
+          <div class="contact-text">timvandevoorde@elog.be</div>
+        </li>
+
+        <li class="contact-item">
+          <div class="contact-icon"><img src="telefoon_icoon.png"></div>
+          <div class="contact-text">0471 88 67 09</div>
+        </li>
+
+        <li class="contact-item">
+          <div class="contact-icon"><img src="adres_icoon.png"></div>
+          <div class="contact-text">
+            Diamantstraat 8, bus 298<br>2200 Herentals
+          </div>
+        </li>
+
+        <li class="contact-item">
+          <div class="contact-icon"><img src="link_icoon.png"></div>
+          <div class="contact-text">
+            <a href="https://elogautomation.com/nl/" target="_blank">
+              https://elogautomation.com/nl/
+            </a>
+          </div>
+        </li>
+
+      </ul>
+
+      <!-- QR -->
+      <div class="qr-wrapper">
+        <img src="QRcode.png" alt="QR-code">
+      </div>
+
+      <!-- BUTTON: WORKING VCARD DOWNLOAD -->
+      <a href="tim-van-de-voorde.vcf" download="Tim-Van-de-Voorde.vcf" class="cta-btn">
+        contact opslaan
+      </a>
+
+      <!-- CONVEYOR -->
+      <div class="conveyor">
+        <div class="conveyor-belt"></div>
+
+        <div class="conveyor-box box-1"></div>
+        <div class="conveyor-box box-2"></div>
+        <div class="conveyor-box box-3"></div>
+        <div class="conveyor-box box-4"></div>
+        <div class="conveyor-box box-5"></div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

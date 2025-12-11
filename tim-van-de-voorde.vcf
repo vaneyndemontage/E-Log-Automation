@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Van de Voorde;Tim;;;
+FN:Tim Van de Voorde
+ORG:E'LOG Automation
+TITLE:Project Engineer
+TEL;TYPE=CELL:+32471886709
+EMAIL;TYPE=WORK:timvandevoorde@elog.be
+ADR;TYPE=WORK:;;Diamantstraat 8 bus 298;Herentals;;2200;Belgium
+URL:https://elogautomation.com/nl/
+END:VCARD
